@@ -1,0 +1,28 @@
+# amiHerbAI — Herbal AI Companion
+> Dual-engine (Grok + DeepSeek) AI companion for medicinal plants, natural remedies, and phytotherapy.
+
+## What this is
+- AI-powered informational companion for herbal medicine topics
+- Every answer is cross-verified by two independent AI models
+- When models disagree, the system says so honestly instead of guessing
+- NOT a medical device, NOT a diagnostic tool, NOT a substitute for professional advice
+
+## Architecture
+- Frontend: static HTML on GitHub Pages (amiherbai.com)
+- Backend: FastAPI on Railway with dual-engine anti-confabulation
+- Payment: Stripe Checkout for Pro subscriptions
+- Compliance: EU AI Act (Art. 50 transparency) + GDPR
+
+## What is tested
+- Dual-engine concordance verification
+- Crisis detection safety layer
+- Rate limiting (free: 5/day, server: 20/min)
+- Stripe checkout flow
+
+## What is NOT tested
+- Long-term subscription management
+- Herbal information accuracy (AI-generated, may contain errors)
+- All herb-drug interaction coverage
+
+## Contact
+hello@amiherbai.com
