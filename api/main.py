@@ -167,16 +167,16 @@ def chat(req: ChatRequest, request: Request):
 def create_checkout():
     if not STRIPE_SECRET or not STRIPE_PRICE_ID:
         raise HTTPException(503, "Payment system not configured yet")
-    session = stripe.checkout.Session.create(
-        mode="subscription",
-        payment_method_types=["card"],
-        line_items=[{"price": STRIPE_PRICE_ID, "quantity": 1}],
-        success_url=SITE_URL + "?payment=success",
-        cancel_url=SITE_URL + "?payment=cancelled",
-        automatic_tax={"enabled": True},
-        tax_id_collection={"enabled": True},
-        consent_collection={"terms_of_service": "required"},
-    )
+    try:
+        session = stripe.checkout.Session.create(
+            mode="subscription",
+            payment_method_types=["card"],
+            line_items=[{"price": STRIPE_PRICE_ID, "quantity": 1}],
+            success_url=SITE_URL + "?payment=success",
+            cancel_url=SITE_URL + "?payment=cancelled",
+        )
+    except stripe.error.StripeError as e:
+        raise HTTPException(502, f"Payment provider error: {e.user_message or str(e)}")
     return {"url": session.url}
 
 
