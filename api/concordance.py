@@ -63,7 +63,7 @@ def check_concordance(a: str, b: str, threshold: float = 0.45) -> Concordance:
     a_only, b_only = na - nb, nb - na
     numeric_conflict = bool(a_only) and bool(b_only)
 
-    if numeric_conflict:
+    if numeric_conflict and score < 0.70:
         return Concordance(score, True, na, nb, agree=False,
                            reason="contradictory numbers between engines")
     if score >= threshold:
