@@ -153,6 +153,11 @@ footer{padding:48px 0 32px;border-top:1px solid var(--border);margin-top:80px}
   .modal{padding:24px}
   nav{padding:12px 0}
 }
+
+.lang-toggle{display:flex;gap:.3rem;justify-content:center;margin-top:.8rem}
+.lang-toggle button{background:var(--surface);border:1px solid var(--border);color:var(--text2);padding:.25rem .7rem;border-radius:6px;cursor:pointer;font-size:.78rem;font-weight:600;transition:all .2s}
+.lang-toggle button.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+[data-i18n]{transition:opacity .15s}
 </style>
 </head>
 <body>
@@ -325,7 +330,7 @@ footer{padding:48px 0 32px;border-top:1px solid var(--border);margin-top:80px}
           </div>
         </div>
         <div class="chat-input-row">
-          <input type="text" id="chatInput" placeholder="Ask about any herb, remedy, or plant..." maxlength="500" autocomplete="off">
+          <input type="text" id="chatInput" placeholder="Ask about any herb, remedy, or plant..." data-i18n="placeholder" maxlength="500" autocomplete="off">
           <button class="btn btn-primary" id="chatSendBtn" onclick="sendChat()">→</button>
         </div>
         <p class="chat-status" id="chatStatus"></p>
@@ -704,6 +709,29 @@ async function handleProPurchase() {
   }
   updateLimitDisplay();
 })();
+
+
+// i18n
+const T = {"tagline": {"en": "AI Herbal Companion — dual-engine verified", "ro": "Companion AI Plante Medicinale — verificat cu motor dual"}, "card1_h": {"en": "Herb Knowledge", "ro": "Cunoștințe Plante"}, "card1_p": {"en": "Evidence-based information about herbs, uses, and traditional remedies", "ro": "Informații bazate pe dovezi despre plante, utilizări și remedii tradiționale"}, "card2_h": {"en": "Safety First", "ro": "Siguranță Mai Întâi"}, "card2_p": {"en": "Drug interactions, contraindications, and dosage guidance", "ro": "Interacțiuni medicamentoase, contraindicații și ghid de dozare"}, "card3_h": {"en": "Wellness Support", "ro": "Suport Bunăstare"}, "card3_p": {"en": "Natural approaches to common health concerns, verified by two AI engines", "ro": "Abordări naturale pentru probleme de sănătate comune, verificate de două motoare AI"}, "chat_h2": {"en": "Ask about herbs & wellness", "ro": "Întreabă despre plante și bunăstare"}, "sys_msg": {"en": "amiHerbAI — dual-engine verified herbal companion. 5 free questions/day.", "ro": "amiHerbAI — companion herbal verificat dual-engine. 5 întrebări gratuite/zi."}, "placeholder": {"en": "e.g. What are the benefits of chamomile tea?", "ro": "ex. Care sunt beneficiile ceaiului de mușețel?"}, "send": {"en": "Send", "ro": "Trimite"}, "free_note": {"en": "Free: 5 questions/day", "ro": "Gratuit: 5 întrebări/zi"}, "pro": {"en": "Pro:", "ro": "Pro:"}, "unlimited": {"en": "unlimited", "ro": "nelimitat"}, "upgrade": {"en": "Upgrade to Pro — €9.99/mo", "ro": "Upgrade la Pro — €9.99/lună"}, "feat_h2": {"en": "What amiHerbAI can help with", "ro": "Cum te poate ajuta amiHerbAI"}, "compliance_p": {"en": "Regulation-aware AI", "ro": "AI conform cu legislația"}, "footer_disc": {"en": "amiHerbAI is an AI education tool — not a substitute for medical advice.", "ro": "amiHerbAI este un instrument educativ AI — nu înlocuiește sfatul medical."}};
+let currentLang = localStorage.getItem('amiherbai_lang') || 'en';
+
+function switchLang(lang) {
+  currentLang = lang;
+  localStorage.setItem('amiherbai_lang', lang);
+  document.getElementById('langEn').classList.toggle('active', lang === 'en');
+  document.getElementById('langRo').classList.toggle('active', lang === 'ro');
+  document.documentElement.lang = lang === 'ro' ? 'ro' : 'en';
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.dataset.i18n;
+    if (T[key] && T[key][lang]) {
+      if (el.tagName === 'TEXTAREA' || el.tagName === 'INPUT') el.placeholder = T[key][lang];
+      else el.textContent = T[key][lang];
+    }
+  });
+}
+
+// Apply saved language on load
+document.addEventListener('DOMContentLoaded', () => { if (currentLang !== 'en') switchLang(currentLang); });
 </script>
 </body>
 </html>
